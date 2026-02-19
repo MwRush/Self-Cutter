@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Cutter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-top">
+                <h1 data-i18n="title">Image Cutter</h1>
+                <div class="header-actions">
+                    <button id="langToggle" class="icon-btn" aria-label="Toggle language">EN</button>
+                    <button id="themeToggle" class="icon-btn" aria-label="Toggle theme">
+                        <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <section class="upload-section">
+                <label for="fileInput" class="upload-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <span data-i18n="upload">Choisir une image</span>
+                </label>
+                <input type="file" id="fileInput" accept="image/*">
+            </section>
+
+            <section class="settings-section" id="settingsSection">
+                <div class="preview-container">
+                    <canvas id="previewCanvas"></canvas>
+                </div>
+
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="widthInput" data-i18n="width">Largeur (px)</label>
+                        <input type="number" id="widthInput" value="512" min="32" max="4096">
+                    </div>
+
+                    <div class="control-group">
+                        <label for="heightInput" data-i18n="height">Hauteur (px)</label>
+                        <input type="number" id="heightInput" value="512" min="32" max="4096">
+                    </div>
+
+                    <div class="control-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="keepEmpty" checked>
+                            <span data-i18n="keepEmpty">Garder les images vides</span>
+                        </label>
+                    </div>
+
+                    <div class="control-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="overlapMode">
+                            <span data-i18n="overlap">Mode chevauchement (50%)</span>
+                        </label>
+                    </div>
+
+                    <button id="cutBtn" class="btn-primary" data-i18n="cut">Découper</button>
+                </div>
+            </section>
+
+            <section class="results-section" id="resultsSection">
+                <div class="results-header">
+                    <h2 data-i18n="results">Résultats</h2>
+                    <span id="imageCount"></span>
+                </div>
+                <div class="results-grid" id="resultsGrid"></div>
+                <div class="results-actions">
+                    <button id="downloadAllBtn" class="btn-secondary" data-i18n="downloadAll">Télécharger tout (ZIP)</button>
+                    <button id="resetBtn" class="btn-secondary" data-i18n="newImage">Nouvelle image</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
