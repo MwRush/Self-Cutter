@@ -205,11 +205,19 @@ downloadAllBtn.addEventListener('click', () => {
         zip.file(`cut_${item.x}_${item.y}.png`, base64Data, { base64: true });
     });
 
-    zip.generateAsync({ type: 'blob' }).then((blob) => {
+    zip.generateAsync({
+        type: 'blob',
+        compression: 'DEFLATE',
+        compressionOptions: { level: 6 }
+    }).then((blob) => {
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
         link.download = 'cut_images.zip';
+
+        link.setAttribute('download', 'cut_images.zip');
         link.click();
+
+        setTimeout(() => URL.revokeObjectURL(link.href), 100);
     });
 });
 
