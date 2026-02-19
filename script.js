@@ -1,6 +1,6 @@
 const translations = {
     fr: {
-        title: 'Image Cutter',
+        title: 'Découpeur d\'Image',
         upload: 'Choisir une image',
         width: 'Largeur (px)',
         height: 'Hauteur (px)',
@@ -10,8 +10,11 @@ const translations = {
         results: 'Résultats',
         downloadAll: 'Télécharger tout (ZIP)',
         newImage: 'Nouvelle image',
+        downloadBtn: 'Télécharger',
         images: 'images',
-        image: 'image'
+        image: 'image',
+        zipFilename: 'images_decoupees',
+        imagePrefix: 'decoupe'
     },
     en: {
         title: 'Image Cutter',
@@ -24,8 +27,11 @@ const translations = {
         results: 'Results',
         downloadAll: 'Download all (ZIP)',
         newImage: 'New image',
+        downloadBtn: 'Download',
         images: 'images',
-        image: 'image'
+        image: 'image',
+        zipFilename: 'cut_images',
+        imagePrefix: 'cut'
     }
 };
 
@@ -158,6 +164,8 @@ cutBtn.addEventListener('click', () => {
                 const downloadBtn = document.createElement('button');
                 downloadBtn.className = 'download-btn';
                 downloadBtn.textContent = '↓';
+                downloadBtn.setAttribute('aria-label', translations[currentLang].downloadBtn);
+                downloadBtn.title = translations[currentLang].downloadBtn;
                 downloadBtn.onclick = () => downloadImage(canvas, x, y);
                 item.appendChild(downloadBtn);
 
@@ -188,8 +196,9 @@ function hasNonTransparentPixels(imageData) {
 }
 
 function downloadImage(canvas, x, y) {
+    const prefix = translations[currentLang].imagePrefix;
     const link = document.createElement('a');
-    link.download = `cut_${x}_${y}.png`;
+    link.download = `${prefix}_${x}_${y}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
 }
@@ -198,11 +207,12 @@ downloadAllBtn.addEventListener('click', () => {
     if (cutImages.length === 0) return;
 
     const zip = new JSZip();
+    const prefix = translations[currentLang].imagePrefix;
 
     cutImages.forEach((item) => {
         const dataUrl = item.canvas.toDataURL('image/png');
         const base64Data = dataUrl.split(',')[1];
-        zip.file(`cut_${item.x}_${item.y}.png`, base64Data, { base64: true });
+        zip.file(`${prefix}_${item.x}_${item.y}.png`, base64Data, { base64: true });
     });
 
     zip.generateAsync({
@@ -212,11 +222,8 @@ downloadAllBtn.addEventListener('click', () => {
     }).then((blob) => {
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = 'cut_images.zip';
-
-        link.setAttribute('download', 'cut_images.zip');
+        link.download = translations[currentLang].zipFilename + '.zip';
         link.click();
-
         setTimeout(() => URL.revokeObjectURL(link.href), 100);
     });
 });

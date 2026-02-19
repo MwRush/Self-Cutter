@@ -44,6 +44,18 @@ body {
     max-width: 1000px;
     margin: 0 auto;
     padding: 2rem;
+    animation: slideIn 0.4s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @media (max-width: 480px) {
@@ -68,6 +80,10 @@ h1 {
     font-weight: 600;
     color: var(--text-primary);
     letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 @media (max-width: 480px) {
@@ -93,20 +109,30 @@ h1 {
     background: var(--bg-card);
     color: var(--text-primary);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     font-size: 0.8rem;
     font-weight: 600;
+    position: relative;
+    overflow: hidden;
 }
 
 .icon-btn:hover {
     border-color: var(--accent);
     background: var(--bg-input);
     color: var(--text-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.icon-btn:active {
+    transform: translateY(0);
 }
 
 .icon-btn svg {
     width: 20px;
     height: 20px;
+    position: relative;
+    z-index: 1;
 }
 
 [data-theme="dark"] .sun-icon {
@@ -131,6 +157,7 @@ h1 {
     border-radius: var(--radius-lg);
     border: 1px solid var(--border-color);
     transition: background 0.3s ease, border-color 0.3s ease;
+    animation: slideIn 0.4s ease 0.05s both;
 }
 
 @media (max-width: 480px) {
@@ -150,7 +177,7 @@ h1 {
     border: 2px dashed var(--border-color);
     border-radius: var(--radius-md);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @media (max-width: 480px) {
@@ -162,15 +189,18 @@ h1 {
 .upload-label:hover {
     border-color: var(--accent);
     background: var(--bg-card);
-    color: var(--text-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .upload-label:hover svg {
     color: var(--text-primary);
+    transform: translateY(-3px);
 }
 
 .upload-label svg {
     color: var(--text-secondary);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 #fileInput {
@@ -179,6 +209,7 @@ h1 {
 
 .settings-section {
     margin-top: 1.5rem;
+    animation: slideIn 0.4s ease 0.1s both;
 }
 
 .preview-container {
@@ -202,6 +233,18 @@ h1 {
     max-width: 100%;
     border-radius: var(--radius-md);
     background: repeating-conic-gradient(var(--border-color) 0% 25%, var(--bg-input) 0% 50%) 50% / 16px 16px;
+    animation: canvasFadeIn 0.4s ease;
+}
+
+@keyframes canvasFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 .controls {
@@ -251,13 +294,18 @@ input[type="number"] {
     background: var(--bg-input);
     color: var(--text-primary);
     font-size: 1rem;
-    transition: all 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+input[type="number"]:hover {
+    border-color: var(--accent);
 }
 
 input[type="number"]:focus {
     outline: none;
     border-color: var(--accent);
     background: var(--bg-card);
+    box-shadow: 0 0 0 3px rgba(128, 128, 128, 0.1);
 }
 
 .checkbox-group label {
@@ -269,6 +317,11 @@ input[type="number"]:focus {
     padding: 0.5rem 0;
     text-transform: none;
     letter-spacing: normal;
+    transition: opacity 0.2s ease;
+}
+
+.checkbox-group label:hover {
+    opacity: 0.8;
 }
 
 .checkbox-group input[type="checkbox"] {
@@ -276,6 +329,7 @@ input[type="number"]:focus {
     height: 18px;
     border-radius: 4px;
     cursor: pointer;
+    accent-color: var(--text-primary);
 }
 
 button {
@@ -287,19 +341,42 @@ button {
     font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
 }
 
-@media (max-width: 400px) {
-    button {
-        padding: 0.75rem 1rem;
-    }
+button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+button:hover::before {
+    left: 100%;
 }
 
 button:hover {
     border-color: var(--accent);
     background: var(--bg-input);
     color: var(--text-primary);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 400px) {
+    button {
+        padding: 0.75rem 1rem;
+    }
 }
 
 .btn-primary {
@@ -312,10 +389,17 @@ button:hover {
     background: var(--accent);
     border-color: var(--accent);
     color: var(--bg-card);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.btn-secondary {
+    background: var(--bg-card);
+    color: var(--text-primary);
 }
 
 .results-section {
     margin-top: 1.5rem;
+    animation: slideIn 0.4s ease 0.15s both;
 }
 
 .results-header {
@@ -379,11 +463,33 @@ button:hover {
     border-radius: var(--radius-md);
     border: 1px solid var(--border-color);
     overflow: hidden;
-    transition: border-color 0.3s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: resultFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes resultFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.result-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    z-index: 1;
 }
 
 .result-item.empty {
     opacity: 0.3;
+}
+
+.result-item.empty:hover {
+    opacity: 0.5;
 }
 
 .result-item canvas {
@@ -401,7 +507,8 @@ button:hover {
     background: var(--bg-card);
     border-radius: var(--radius-sm);
     opacity: 0;
-    transition: opacity 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(4px);
 }
 
 @media (hover: none) {
@@ -412,6 +519,12 @@ button:hover {
 
 .result-item:hover .download-btn {
     opacity: 1;
+    transform: translateY(0);
+}
+
+.result-item .download-btn:hover {
+    background: var(--text-primary);
+    color: var(--bg-card);
 }
 
 .results-actions {
