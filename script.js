@@ -136,7 +136,7 @@ cutBtn.addEventListener('click', () => {
 
     const stepX = overlap ? Math.ceil(tileWidth / 2) : tileWidth;
     const stepY = overlap ? Math.ceil(tileHeight / 2) : tileHeight;
-    let index = 1;
+    let index = 0;
 
     for (let y = 0; y < originalImage.height; y += stepY) {
         for (let x = 0; x < originalImage.width; x += stepX) {
