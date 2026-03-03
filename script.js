@@ -6,6 +6,7 @@ const translations = {
         height: 'Hauteur (px)',
         keepEmpty: 'Garder les images vides',
         overlap: 'Mode chevauchement (50%)',
+        prefix: 'Préfixe',
         cut: 'Découper',
         results: 'Résultats',
         downloadAll: 'Télécharger tout (ZIP)',
@@ -13,8 +14,7 @@ const translations = {
         downloadBtn: 'Télécharger',
         images: 'images',
         image: 'image',
-        zipFilename: 'images_decoupees',
-        imagePrefix: 'decoupe'
+        zipFilename: 'images_decoupees'
     },
     en: {
         title: 'Image Cutter',
@@ -23,6 +23,7 @@ const translations = {
         height: 'Height (px)',
         keepEmpty: 'Keep empty images',
         overlap: 'Overlap mode (50%)',
+        prefix: 'Prefix',
         cut: 'Cut',
         results: 'Results',
         downloadAll: 'Download all (ZIP)',
@@ -30,8 +31,7 @@ const translations = {
         downloadBtn: 'Download',
         images: 'images',
         image: 'image',
-        zipFilename: 'cut_images',
-        imagePrefix: 'cut'
+        zipFilename: 'cut_images'
     }
 };
 
@@ -46,6 +46,7 @@ const widthInput = document.getElementById('widthInput');
 const heightInput = document.getElementById('heightInput');
 const keepEmptyCheckbox = document.getElementById('keepEmpty');
 const overlapModeCheckbox = document.getElementById('overlapMode');
+const prefixInput = document.getElementById('prefixInput');
 const cutBtn = document.getElementById('cutBtn');
 const resultsGrid = document.getElementById('resultsGrid');
 const imageCount = document.getElementById('imageCount');
@@ -128,12 +129,14 @@ cutBtn.addEventListener('click', () => {
     const tileHeight = parseInt(heightInput.value) || 512;
     const keepEmpty = keepEmptyCheckbox.checked;
     const overlap = overlapModeCheckbox.checked;
+    const prefix = prefixInput.value.trim() || 'tile';
 
     cutImages = [];
     resultsGrid.innerHTML = '';
 
     const stepX = overlap ? Math.ceil(tileWidth / 2) : tileWidth;
     const stepY = overlap ? Math.ceil(tileHeight / 2) : tileHeight;
+    let index = 1;
 
     for (let y = 0; y < originalImage.height; y += stepY) {
         for (let x = 0; x < originalImage.width; x += stepX) {
@@ -166,17 +169,17 @@ cutBtn.addEventListener('click', () => {
                 downloadBtn.textContent = '↓';
                 downloadBtn.setAttribute('aria-label', translations[currentLang].downloadBtn);
                 downloadBtn.title = translations[currentLang].downloadBtn;
-                downloadBtn.onclick = () => downloadImage(canvas, x, y);
+                downloadBtn.onclick = () => downloadImage(canvas, prefix, index);
                 item.appendChild(downloadBtn);
 
                 resultsGrid.appendChild(item);
 
                 cutImages.push({
                     canvas: canvas,
-                    x: x,
-                    y: y,
+                    index: index,
                     isEmpty: !hasContent
                 });
+                index++;
             }
         }
     }
@@ -195,10 +198,9 @@ function hasNonTransparentPixels(imageData) {
     return false;
 }
 
-function downloadImage(canvas, x, y) {
-    const prefix = translations[currentLang].imagePrefix;
+function downloadImage(canvas, prefix, index) {
     const link = document.createElement('a');
-    link.download = `${prefix}_${x}_${y}.png`;
+    link.download = `${prefix}${index}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
 }
@@ -207,12 +209,12 @@ downloadAllBtn.addEventListener('click', () => {
     if (cutImages.length === 0) return;
 
     const zip = new JSZip();
-    const prefix = translations[currentLang].imagePrefix;
+    const prefix = prefixInput.value.trim() || 'tile';
 
     cutImages.forEach((item) => {
         const dataUrl = item.canvas.toDataURL('image/png');
         const base64Data = dataUrl.split(',')[1];
-        zip.file(`${prefix}_${item.x}_${item.y}.png`, base64Data, { base64: true });
+        zip.file(`${prefix}${item.index}.png`, base64Data, { base64: true });
     });
 
     zip.generateAsync({
